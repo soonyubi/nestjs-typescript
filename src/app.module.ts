@@ -6,6 +6,8 @@ import { DatabaseModule } from './database/database.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { UsersModule } from './users/users.module';
 import { CategoriesModule } from './categories/categories.module';
+import { PrivateFilesController } from './private-files/private-files.controller';
+import { PrivateFilesModule } from './private-files/private-files.module';
 
 @Module({
   imports: [
@@ -23,6 +25,7 @@ import { CategoriesModule } from './categories/categories.module';
         AWS_ACCESS_KEY_ID: Joi.string().required(),
         AWS_SECRET_ACCESS_KEY: Joi.string().required(),
         AWS_PUBLIC_BUCKET_NAME: Joi.string().required(),
+        AWS_PRIVATE_BUCKET_NAME : Joi.string().required(),
         PORT: Joi.number(),
       })
     }),
@@ -30,8 +33,9 @@ import { CategoriesModule } from './categories/categories.module';
     AuthenticationModule,
     UsersModule,
     CategoriesModule,
+    PrivateFilesModule,
   ],
-  controllers: [],
+  controllers: [PrivateFilesController],
   providers: [],
 })
 export class AppModule {}

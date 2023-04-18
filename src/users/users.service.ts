@@ -4,13 +4,15 @@ import { Repository } from 'typeorm';
 import User from './user.entity';
 import CreateUserDto from './dto/createUser.dto';
 import { FilesService } from 'src/files/files.service';
+import { PrivateFilesService } from 'src/private-files/private-files.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    private readonly filesService: FilesService
+    private readonly filesService: FilesService,
+    private readonly privateFilesService : PrivateFilesService
   ) {}
 
   async getByEmail(email: string) {
@@ -62,5 +64,9 @@ export class UsersService {
       });
       await this.filesService.deletePublicFile(fileId)
     }
+  }
+
+  async addPrivateFile(userId : number, imageBuffer : Buffer, filename : string){
+    return this.privateFilesService.uploadPrivateFiles(imageBuffer, userId, filename);
   }
 }

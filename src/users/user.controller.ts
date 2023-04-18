@@ -22,5 +22,12 @@ export class UsersController{
     async deleteAvatar(@Req() request: RequestWithUser) {
       return this.usersService.deleteAvatar(request.user.id);
   }
+
+    @Post("files")
+    @UseGuards(JwtAuthenticationGuard)
+    @UseInterceptors(FileInterceptor("file"))
+    async addPrivateFiles(@Req() request : RequestWithUser, @UploadedFile() file : Express.Multer.File){
+      return this.usersService.addPrivateFile(request.user.id, file.buffer, file.filename);
+    }
     
 }
