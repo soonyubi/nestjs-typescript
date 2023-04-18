@@ -1,0 +1,14 @@
+import User from "../../users/user.entity";
+import {Entity, Column, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+
+
+export class PrivateFile{
+    @PrimaryGeneratedColumn()
+    public id: number;
+
+    @Column()
+    public key: string;
+
+    @ManyToOne(() => User, (owner: User) => owner.files)
+    public owner?: User;
+}
