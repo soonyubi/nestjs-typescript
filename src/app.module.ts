@@ -8,6 +8,8 @@ import { UsersModule } from './users/users.module';
 import { CategoriesModule } from './categories/categories.module';
 import { PrivateFilesController } from './private-files/private-files.controller';
 import { PrivateFilesModule } from './private-files/private-files.module';
+import { SearchModule } from './search/search.module';
+
 
 @Module({
   imports: [
@@ -26,6 +28,9 @@ import { PrivateFilesModule } from './private-files/private-files.module';
         AWS_SECRET_ACCESS_KEY: Joi.string().required(),
         AWS_PUBLIC_BUCKET_NAME: Joi.string().required(),
         AWS_PRIVATE_BUCKET_NAME : Joi.string().required(),
+        ELASTICSEARCH_NODE: Joi.string(),
+        ELASTICSEARCH_USERNAME: Joi.string(),
+        ELASTICSEARCH_PASSWORD: Joi.string(),
         PORT: Joi.number(),
       })
     }),
@@ -34,6 +39,7 @@ import { PrivateFilesModule } from './private-files/private-files.module';
     UsersModule,
     CategoriesModule,
     PrivateFilesModule,
+    SearchModule,
   ],
   controllers: [PrivateFilesController],
   providers: [],

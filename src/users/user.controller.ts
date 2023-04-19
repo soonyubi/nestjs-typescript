@@ -4,7 +4,9 @@ import JwtAuthenticationGuard from "../authentication/jwt-authentication.guard";
 import { FileInterceptor } from "@nestjs/platform-express";
 import RequestWithUser from "../authentication/requestWithUser.interface";
 import FindOneParams from "src/utils/findOneParams";
-import {Response} from "express";
+
+import { response } from "express";
+import { Response } from "express";
 
 @Controller("users")
 export class UsersController{
@@ -16,7 +18,7 @@ export class UsersController{
     @UseGuards(JwtAuthenticationGuard)
     @UseInterceptors(FileInterceptor('file'))
     async addAvatar(@Req() request: RequestWithUser, @UploadedFile() file: Express.Multer.File) {
-      return this.usersService.addAvatar(request.user.id, file.buffer, file.originalname);
+      return this.usersService.addAvatar(request.user.id, file.buffer, file.filename);
     }
 
     @Delete('avatar')
