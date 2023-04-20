@@ -3,7 +3,7 @@ import CreatePostDto from './dto/createPost.dto';
 import Post from './post.entity';
 import UpdatePostDto from './dto/updatePost.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { FindManyOptions, In, MoreThan, Repository } from 'typeorm';
 import PostNotFoundException from './exceptions/postNotFound.exception';
 import User from '../users/entities/user.entity';
 import PostsSearchService from './postSearch.service';
@@ -16,8 +16,25 @@ export default class PostsService {
     private postsSearchService : PostsSearchService
   ) {}
 
-  getAllPosts() {
-    return this.postsRepository.find({ relations: ['author'] });
+
+  // SELECT * FROM post where id > startId OFFSET 10 LIMIT 10
+  async getAllPosts(offset?:number, limit? :number , startId ? : number) {
+    const where : FindManyOptions<Post>['where'] = {};
+    let seperateCount = 0;
+    if(startId){
+      where.id = MoreThan(startId);
+      seperateCount = await this.postsRepository.count();
+    }
+    
+    const [items, count] = await this.postsRepository.findAndCount({
+      where,
+      relations:['author'],
+      order:{
+        id : 'ASC'
+      },
+      skip : offset,
+      take : limit
+    });
   }
 
   async getPostById(id: number) {
@@ -57,12 +74,22 @@ export default class PostsService {
     await this.postsSearchService.remove(id);
   }
 
-  async searchForPosts(text : string) {
-    const result = await this.postsSearchService.search(text);
-    const ids= result.map(result=>result.id);
-    if(!ids.length){
-      return [];
+  async searchForPosts(text: string, offset?: number, limit?: number, startId?: number) {
+    const { results, count } = await this.postsSearchService.search(text, offset, limit, startId);
+    const ids = results.map(result => result.id);
+    if (!ids.length) {
+      return {
+        items: [],
+        count
+      }
     }
-    return this.postsRepository.find({where:{id:In(ids)}});
+    const items = await this.postsRepository
+      .find({
+        where: { id: In(ids) }
+      });
+    return {
+      items,
+      count
+    }
   }
 }
