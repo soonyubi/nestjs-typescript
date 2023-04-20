@@ -10,8 +10,8 @@ class Post {
   @Column()
   public title: string;
 
-  @Column()
-  public content: string;
+  @Column('text',{array:true,nullable :true})
+  public paragraphs : string[];
 
   @Column({ nullable: true })
   public category?: string;
@@ -19,7 +19,7 @@ class Post {
   @Index("post_authorId_index")
   @ManyToOne(() => User, (author: User) => author.posts)
   public author: User;
-
+ 
   @ManyToMany(() => Category, (category: Category) => category.posts)
   @JoinTable()
   public categories: Category[];
