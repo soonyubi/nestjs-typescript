@@ -34,7 +34,13 @@ export class AuthenticationController {
   async logIn(@Req() request: RequestWithUser) {
     const {user} = request;
     const accessTokenCookie = this.authenticationService.getCookieWithJwtAccessToken(user.id);
-    const refreshTokenCookie = this.authenticationService.getCookieWithJwtRefreshToken(user.id);
+    const {
+      cookie: refreshTokenCookie,
+      token: refreshToken
+    } = this.authenticationService.getCookieWithJwtRefreshToken(user.id);
+
+    await this.usersService.setCurrentRefreshToken(refreshToken, user.id);
+
     request.res.setHeader('Set-Cookie', [accessTokenCookie, refreshTokenCookie]);
     return user;
   }

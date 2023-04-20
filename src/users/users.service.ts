@@ -1,6 +1,6 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import User from './entities/user.entity';
 import CreateUserDto from './dto/createUser.dto';
 import { FilesService } from 'src/files/files.service';
@@ -13,7 +13,8 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private readonly filesService: FilesService,
-    private readonly privateFilesService : PrivateFilesService
+    private readonly privateFilesService : PrivateFilesService,
+    private connection : Connection
   ) {}
 
   async getByEmail(email: string) {
@@ -69,14 +70,30 @@ export class UsersService {
   }
 
   async deleteAvatar(userId: number) {
+    const queryRunner = await this.connection.createQueryRunner();
     const user = await this.getById(userId);
     const fileId = user.avatar?.id;
+    
     if (fileId) {
-      await this.usersRepository.update(userId, {
-        ...user,
-        avatar: null
-      });
-      await this.filesService.deletePublicFile(fileId)
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+      try{
+        await queryRunner.manager.update(User, userId, {
+          ...user,
+          avatar: null
+        });
+        // this code occurs error : isolation of transaction 
+        // await this.filesService.deletePublicFile(fileId);
+        await this.filesService.deletePublicFileWithQueryRunner(fileId, queryRunner);
+        await queryRunner.commitTransaction();
+      }
+      catch(error){
+        await queryRunner.rollbackTransaction();
+        throw new InternalServerErrorException();
+      }
+      finally{
+        await queryRunner.release();
+      }
     }
   }
 
