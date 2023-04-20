@@ -1,9 +1,9 @@
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import Address from './address.entity';
-import Post from '../posts/post.entity';
-import PublicFile from '../files/entities/publicFile.entity';
-import {PrivateFile} from '../private-files/entities/privateFile.entity';
+import Post from '../../posts/post.entity';
+import PublicFile from '../../files/entities/publicFile.entity';
+import {PrivateFile} from '../../private-files/entities/privateFile.entity';
 
 @Entity()
 class User {
@@ -45,6 +45,11 @@ class User {
     (file: PrivateFile) => file.owner
   )
   public files?: PrivateFile[];
+
+  @Column({nullable: true})
+  @Exclude()
+  public currentHashedRefreshToken? : string;
+  
 }
 
 export default User;

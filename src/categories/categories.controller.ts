@@ -12,7 +12,7 @@ import {
 import CategoriesService from './categories.service';
 import CreateCategoryDto from './dto/createCategory.dto';
 import UpdateCategoryDto from './dto/updateCategory.dto';
-import JwtAuthenticationGuard from '../authentication/jwt-authentication.guard';
+import JwtAuthenticationGuard from '../authentication/guard/jwt-authentication.guard';
 import FindOneParams from '../utils/findOneParams';
 
 @Controller('categories')

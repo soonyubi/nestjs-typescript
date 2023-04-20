@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import User from './user.entity';
-import PublicFile from '../files/entities/publicFile.entity';
+import PublicFile from '../../files/entities/publicFile.entity';
 
 @Entity()
 class Address {
