@@ -1,10 +1,11 @@
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import User from './user.entity';
+import User from './entities/user.entity';
 import CreateUserDto from './dto/createUser.dto';
 import { FilesService } from 'src/files/files.service';
 import { PrivateFilesService } from 'src/private-files/private-files.service';
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class UsersService {
@@ -29,6 +30,19 @@ export class UsersService {
       return user;
     }
     throw new HttpException('User with this id does not exist', HttpStatus.NOT_FOUND);
+  }
+
+  async getUserIfRefreshTokenMatches(refreshToken : string, userId: number){
+    const user = await this.getById(userId);
+
+    const isRefreshTokenMatching = await bcrypt.compare(refreshToken, user.currentHashedRefreshToken);
+    if(isRefreshTokenMatching) return user;
+  }
+
+  async removeRefreshToken(userId: number) {
+    return this.usersRepository.update(userId, {
+      currentHashedRefreshToken: null
+    });
   }
 
   async create(userData: CreateUserDto) {
@@ -75,5 +89,12 @@ export class UsersService {
       return file;
     }
     throw new UnauthorizedException();
+  }
+
+  async setCurrentRefreshToken(refreshToken : string, userId : number){
+    const currentHashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    await this.usersRepository.update(userId, {
+      currentHashedRefreshToken
+    });
   }
 }

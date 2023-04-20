@@ -1,8 +1,8 @@
 import { Controller, Delete, Get, Param, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UsersService } from "./users.service";
-import JwtAuthenticationGuard from "../authentication/jwt-authentication.guard";
+import JwtAuthenticationGuard from "../authentication/guard/jwt-authentication.guard";
 import { FileInterceptor } from "@nestjs/platform-express";
-import RequestWithUser from "../authentication/requestWithUser.interface";
+import RequestWithUser from "../authentication/interface/requestWithUser.interface";
 import FindOneParams from "src/utils/findOneParams";
 
 import { response } from "express";
