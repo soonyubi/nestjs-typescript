@@ -9,7 +9,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { PrivateFilesController } from './private-files/private-files.controller';
 import { PrivateFilesModule } from './private-files/private-files.module';
 import { SearchModule } from './search/search.module';
-
+import {SubscribersModule} from "./subscribers/subscribers.module";
 
 @Module({
   imports: [
@@ -33,6 +33,8 @@ import { SearchModule } from './search/search.module';
         ELASTICSEARCH_NODE: Joi.string(),
         ELASTICSEARCH_USERNAME: Joi.string(),
         ELASTICSEARCH_PASSWORD: Joi.string(),
+        SUBSCRIBERS_SERVICE_HOST: Joi.string(),
+        SUBSCRIBERS_SERVICE_PORT: Joi.string(),
         PORT: Joi.number(),
       })
     }),
@@ -42,6 +44,7 @@ import { SearchModule } from './search/search.module';
     CategoriesModule,
     PrivateFilesModule,
     SearchModule,
+    SubscribersModule
   ],
   controllers: [PrivateFilesController],
   providers: [],
