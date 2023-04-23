@@ -1,7 +1,7 @@
 import { Column, Entity, Index, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import User from '../users/entities/user.entity';
 import Category from '../categories/category.entity';
-import Comments from 'src/comments/entities/comment.entity';
+import Comment from '../comments/entities/comment.entity';
 
 @Entity()
 class Post {
@@ -25,7 +25,7 @@ class Post {
   @JoinTable()
   public categories: Category[];
 
-  @OneToMany(() => Comments, (comment: Comments) => comment.post)
+  @OneToMany(() => Comment, (comment: Comment) => comment.post)
   public comments: Comment[];
 }
 
