@@ -26,6 +26,11 @@ services:
     networks:
       - postgres
 
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq

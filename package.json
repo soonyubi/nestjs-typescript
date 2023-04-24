@@ -47,6 +47,7 @@
     "aws-sdk": "^2.1360.0",
     "bcrypt": "^4.0.1",
     "cache-manager": "^3.6.3",
+    "cache-manager-redis-store": "^2.0.0",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.12.2",
     "cookie-parser": "^1.4.5",
