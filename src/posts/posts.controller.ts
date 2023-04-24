@@ -32,10 +32,6 @@ export default class PostsController {
     private readonly postsService: PostsService
   ) {}
 
-  @Get()
-  getAllPosts() {
-    return this.postsService.getAllPosts();
-  }
 
   @Get(':id')
   getPostById(@Param() { id }: FindOneParams) {
@@ -45,6 +41,7 @@ export default class PostsController {
   @Post()
   @UseGuards(JwtAuthenticationGuard)
   async createPost(@Body() post: CreatePostDto, @Req() req: RequestWithUser) {
+
     return this.postsService.createPost(post, req.user);
   }
 
@@ -66,6 +63,7 @@ export default class PostsController {
     @Query('search') search: string,
     @Query() { offset, limit, startId }: PaginationParams
   ) {
+    
     if (search) {
       return this.postsService.searchForPosts(search, offset, limit, startId);
     }

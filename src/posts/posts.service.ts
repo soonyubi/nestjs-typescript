@@ -29,23 +29,28 @@ export default class PostsService {
   }
 
   // SELECT * FROM post where id > startId OFFSET 10 LIMIT 10
-  async getAllPosts(offset?:number, limit? :number , startId ? : number) {
-    const where : FindManyOptions<Post>['where'] = {};
-    let seperateCount = 0;
-    if(startId){
+  async getAllPosts(offset?: number, limit?: number, startId?: number) {
+    const where: FindManyOptions<Post>['where'] = {};
+    let separateCount = 0;
+    if (startId) {
       where.id = MoreThan(startId);
-      seperateCount = await this.postsRepository.count();
+      separateCount = await this.postsRepository.count();
     }
-    
+
     const [items, count] = await this.postsRepository.findAndCount({
       where,
-      relations:['author'],
-      order:{
-        id : 'ASC'
+      relations: ['author'],
+      order: {
+        id: 'ASC'
       },
-      skip : offset,
-      take : limit
+      skip: offset,
+      take: limit
     });
+
+    return {
+      items,
+      count: startId ? separateCount : count
+    }
   }
 
   async getPostById(id: number) {
@@ -89,6 +94,7 @@ export default class PostsService {
 
   async searchForPosts(text: string, offset?: number, limit?: number, startId?: number) {
     const { results, count } = await this.postsSearchService.search(text, offset, limit, startId);
+    
     const ids = results.map(result => result.id);
     if (!ids.length) {
       return {
