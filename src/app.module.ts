@@ -11,6 +11,9 @@ import { PrivateFilesModule } from './private-files/private-files.module';
 import { SearchModule } from './search/search.module';
 import {SubscribersModule} from "./subscribers/subscribers.module";
 import { CommentsModule } from './comments/comments.module';
+import { EmailModule } from './email/email.module';
+import { EmailSchedulingModule } from './email-scheduling/email-scheduling.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -42,6 +45,9 @@ import { CommentsModule } from './comments/comments.module';
         RABBITMQ_QUEUE_NAME: Joi.string(),
         REDIS_HOST : Joi.string().required(),
         REDIS_PORT: Joi.string().required(),
+        EMAIL_SERVICE: Joi.string().required(),
+        EMAIL_USER: Joi.string().required(),
+        EMAIL_PASSWORD: Joi.string().required(),
         PORT: Joi.number(),
       })
     }),
@@ -52,7 +58,10 @@ import { CommentsModule } from './comments/comments.module';
     PrivateFilesModule,
     SearchModule,
     SubscribersModule,
-    CommentsModule
+    CommentsModule,
+    EmailModule,
+    EmailSchedulingModule,
+    ScheduleModule.forRoot()
   ],
   controllers: [PrivateFilesController],
   providers: [],
