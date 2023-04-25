@@ -13,6 +13,7 @@ import {SubscribersModule} from "./subscribers/subscribers.module";
 import { CommentsModule } from './comments/comments.module';
 import { EmailModule } from './email/email.module';
 import { EmailSchedulingModule } from './email-scheduling/email-scheduling.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -59,7 +60,8 @@ import { EmailSchedulingModule } from './email-scheduling/email-scheduling.modul
     SubscribersModule,
     CommentsModule,
     EmailModule,
-    EmailSchedulingModule
+    EmailSchedulingModule,
+    ScheduleModule.forRoot()
   ],
   controllers: [PrivateFilesController],
   providers: [],
