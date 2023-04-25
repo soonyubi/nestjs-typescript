@@ -1,26 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
+import { AuthenticationService } from 'src/authentication/authentication.service';
+import {Socket} from "socket.io";
+import {parse} from "cookie";
+import { WsException } from '@nestjs/websockets';
 
 @Injectable()
 export class ChatService {
-  create(createChatDto: CreateChatDto) {
-    return 'This action adds a new chat';
-  }
+  
+  constructor(
+    private readonly authenticationService : AuthenticationService
+  ){}
 
-  findAll() {
-    return `This action returns all chat`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} chat`;
-  }
-
-  update(id: number, updateChatDto: UpdateChatDto) {
-    return `This action updates a #${id} chat`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} chat`;
+  async getUserFromSocket(socket : Socket){
+    const cookie = socket.handshake.headers.cookie;
+    const {Authentication : authenticationToken} = parse(cookie);
+    const user = await this.authenticationService.getUserFromAuthenticationToken(authenticationToken);
+    if(!user){
+      throw new WsException('Invalid Credentails');
+    }
+    return user;
   }
 }
