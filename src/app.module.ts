@@ -40,6 +40,8 @@ import { CommentsModule } from './comments/comments.module';
         RABBITMQ_PASSWORD: Joi.string(),
         RABBITMQ_HOST: Joi.string(),
         RABBITMQ_QUEUE_NAME: Joi.string(),
+        REDIS_HOST : Joi.string().required(),
+        REDIS_PORT: Joi.string().required(),
         PORT: Joi.number(),
       })
     }),
